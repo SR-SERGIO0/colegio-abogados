@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Colegiados Custom</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+
+    .login-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #1a1a2e; display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+    }
+    .login-box {
+      background: #16213e; padding: 40px; border-radius: 8px; width: 320px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .login-box h2 { margin-bottom: 20px; color: #e94560; text-align: center; }
+    .login-box input {
+      width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #333;
+      border-radius: 4px; background: #0f3460; color: #eee; font-size: 14px;
+    }
+    .login-box button {
+      width: 100%; padding: 10px; background: #e94560; color: white; border: none;
+      border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;
+    }
+    .login-box button:hover { background: #c73650; }
+    .login-error { color: #e94560; font-size: 12px; text-align: center; margin-top: 8px; display: none; }
+
+    .admin-container { max-width: 1000px; margin: 0 auto; padding: 20px; display: none; }
+    .admin-container.active { display: block; }
+
+    .admin-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e94560;
+    }
+    .admin-header h1 { font-size: 20px; color: #e94560; }
+    .btn-logout {
+      background: #333; color: #ccc; border: 1px solid #555; padding: 6px 14px;
+      border-radius: 4px; cursor: pointer; font-size: 12px;
+    }
+
+    .form-card {
+      background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px;
+    }
+    .form-card h3 { margin-bottom: 15px; color: #e94560; font-size: 15px; }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .form-grid label { font-size: 11px; color: #aaa; display: block; margin-bottom: 3px; }
+    .form-grid input, .form-grid select {
+      width: 100%; padding: 7px; border: 1px solid #333; border-radius: 4px;
+      background: #0f3460; color: #eee; font-size: 13px;
+    }
+    .btn-add {
+      margin-top: 12px; padding: 8px 24px; background: #e94560; color: white;
+      border: none; border-radius: 4px; cursor: pointer; font-weight: 600;
+    }
+    .btn-add:hover { background: #c73650; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #16213e; padding: 10px; text-align: left; color: #e94560; }
+    td { padding: 8px 10px; border-bottom: 1px solid #222; }
+    tr:hover { background: #16213e; }
+
+    .btn-edit, .btn-delete {
+      padding: 3px 10px; border: none; border-radius: 3px;
+      cursor: pointer; font-size: 11px; margin-right: 4px;
+    }
+    .btn-edit { background: #0f3460; color: #eee; }
+    .btn-delete { background: #e94560; color: white; }
+
+    .msg { padding: 8px 14px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; display: none; }
+    .msg.success { background: #1b5e20; color: #a5d6a7; display: block; }
+    .msg.error { background: #b71c1c; color: #ef9a9a; display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-box">
+      <h2>Admin Panel</h2>
+      <input type="text" id="login-user" placeholder="Usuario">
+      <input type="password" id="login-pass" placeholder="Contrase&ntilde;a">
+      <button onclick="doLogin()">Ingresar</button>
+      <div class="login-error" id="login-error">Credenciales incorrectas</div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="admin-container" id="admin-container">
+    <div class="admin-header">
+      <h1>Colegiados Custom - Panel Admin</h1>
+      <button class="btn-logout" onclick="doLogout()">Cerrar Sesion</button>
+    </div>
+
+    <div id="msg-area"></div>
+
+    <!-- Form agregar -->
+    <div class="form-card">
+      <h3 id="form-title">Agregar Colegiado</h3>
+      <input type="hidden" id="edit-id">
+      <div class="form-grid">
+        <div>
+          <label>Reg. CIP *</label>
+          <input type="text" id="f-cip" placeholder="123456">
+        </div>
+        <div>
+          <label>Apellidos y Nombres *</label>
+          <input type="text" id="f-nombre" placeholder="APELLIDO1 APELLIDO2, NOMBRE" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Especialidad</label>
+          <input type="text" id="f-especialidad" placeholder="INGENIERIA CIVIL" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Sede</label>
+          <input type="text" id="f-sede" placeholder="LIMA" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Estado</label>
+          <select id="f-estado">
+            <option value="HABILITADO">HABILITADO</option>
+            <option value="INHABILITADO">INHABILITADO</option>
+          </select>
+        </div>
+        <div>
+          <label>Nro Documento</label>
+          <input type="text" id="f-nrodoc" placeholder="12345678">
+        </div>
+      </div>
+      <button class="btn-add" id="btn-save" onclick="saveRecord()">Guardar</button>
+      <button class="btn-add" id="btn-cancel" onclick="cancelEdit()" style="background:#555;display:none;">Cancelar</button>
+    </div>
+
+    <!-- Tabla -->
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>CIP</th>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+          <th>Sede</th>
+          <th>Estado</th>
+          <th>Nro Doc</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const API = '<%= apiUrl %>';
+    let authHeader = '';
+    let editingId = null;
+
+    function doLogin() {
+      const user = document.getElementById('login-user').value;
+      const pass = document.getElementById('login-pass').value;
+      authHeader = 'Basic ' + btoa(user + ':' + pass);
+
+      fetch(`${API}/admin/colegiados`, { headers: { Authorization: authHeader } })
+        .then(r => {
+          if (r.status === 401 || r.status === 403) throw new Error('bad');
+          return r.json();
+        })
+        .then(() => {
+          document.getElementById('login-overlay').style.display = 'none';
+          document.getElementById('admin-container').classList.add('active');
+          loadRecords();
+        })
+        .catch(() => {
+          document.getElementById('login-error').style.display = 'block';
+        });
+    }
+
+    function doLogout() {
+      authHeader = '';
+      document.getElementById('login-overlay').style.display = 'flex';
+      document.getElementById('admin-container').classList.remove('active');
+      document.getElementById('login-user').value = '';
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-error').style.display = 'none';
+    }
+
+    // Enter key on login
+    document.getElementById('login-pass').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg-area');
+      el.innerHTML = `<div class="msg ${type}">${text}</div>`;
+      setTimeout(() => el.innerHTML = '', 3000);
+    }
+
+    async function loadRecords() {
+      try {
+        const res = await fetch(`${API}/admin/colegiados`, { headers: { Authorization: authHeader } });
+        const data = await res.json();
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = data.map(r => `
+          <tr>
+            <td>${r.id}</td>
+            <td>${r.vRegCip}</td>
+            <td>${r.vRazonSocial}</td>
+            <td>${r.vEspecialidad || ''}</td>
+            <td>${r.vSede || ''}</td>
+            <td>${r.vEstado || ''}</td>
+            <td>${r.nro_documento || ''}</td>
+            <td>
+              <button class="btn-edit" onclick='startEdit(${JSON.stringify(r)})'>Editar</button>
+              <button class="btn-delete" onclick="deleteRecord(${r.id})">Eliminar</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        showMsg('Error cargando registros', 'error');
+      }
+    }
+
+    async function saveRecord() {
+      const body = {
+        vRegCip: document.getElementById('f-cip').value.trim(),
+        vRazonSocial: document.getElementById('f-nombre').value.trim().toUpperCase(),
+        vEspecialidad: document.getElementById('f-especialidad').value.trim().toUpperCase(),
+        vSede: document.getElementById('f-sede').value.trim().toUpperCase(),
+        vEstado: document.getElementById('f-estado').value,
+        nro_documento: document.getElementById('f-nrodoc').value.trim()
+      };
+
+      if (!body.vRegCip || !body.vRazonSocial) {
+        return showMsg('CIP y Nombre son obligatorios', 'error');
+      }
+
+      const method = editingId ? 'PUT' : 'POST';
+      const url = editingId ? `${API}/admin/colegiados/${editingId}` : `${API}/admin/colegiados`;
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json', Authorization: authHeader },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showMsg(editingId ? 'Registro actualizado' : 'Registro creado', 'success');
+          cancelEdit();
+          clearForm();
+          loadRecords();
+        } else {
+          showMsg(data.error || 'Error', 'error');
+        }
+      } catch (e) {
+        showMsg('Error de conexion', 'error');
+      }
+    }
+
+    function startEdit(record) {
+      editingId = record.id;
+      document.getElementById('f-cip').value = record.vRegCip || '';
+      document.getElementById('f-nombre').value = record.vRazonSocial || '';
+      document.getElementById('f-especialidad').value = record.vEspecialidad || '';
+      document.getElementById('f-sede').value = record.vSede || '';
+      document.getElementById('f-estado').value = record.vEstado || 'HABILITADO';
+      document.getElementById('f-nrodoc').value = record.nro_documento || '';
+      document.getElementById('form-title').textContent = 'Editar Colegiado #' + record.id;
+      document.getElementById('btn-cancel').style.display = 'inline-block';
+      window.scrollTo(0, 0);
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      document.getElementById('form-title').textContent = 'Agregar Colegiado';
+      document.getElementById('btn-cancel').style.display = 'none';
+    }
+
+    function clearForm() {
+      ['f-cip', 'f-nombre', 'f-especialidad', 'f-sede', 'f-nrodoc'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('f-estado').value = 'HABILITADO';
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm('Eliminar registro #' + id + '?')) return;
+      try {
+        const res = await fetch(`${API}/admin/colegiados/${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: authHeader }
+        });
+        if (res.ok) {
+          showMsg('Registro eliminado', 'success');
+          loadRecords();
+        }
+      } catch (e) {
+        showMsg('Error eliminando', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

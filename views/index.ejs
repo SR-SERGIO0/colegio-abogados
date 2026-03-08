@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busqueda de Colegiados - CIP</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-left">
+        <svg width="55" height="50" viewBox="0 0 55 50">
+          <rect x="0" y="0" width="55" height="50" rx="4" fill="#fff"/>
+          <text x="8" y="22" font-size="14" font-weight="bold" fill="#d4a017">C</text>
+          <text x="20" y="22" font-size="14" font-weight="bold" fill="#e53935">I</text>
+          <text x="28" y="22" font-size="14" font-weight="bold" fill="#1565c0">P</text>
+          <text x="8" y="42" font-size="10" fill="#333" font-weight="bold">VIRTUAL</text>
+        </svg>
+      </div>
+      <h1>B&uacute;squeda de Colegiados</h1>
+      <div class="logo-right">
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <circle cx="25" cy="25" r="24" fill="#851610" stroke="#ffd700" stroke-width="1"/>
+          <text x="25" y="30" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CIP</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel de busqueda -->
+    <div class="panel">
+      <div class="panel-body">
+        <div class="form-row">
+          <!-- Buscar Por -->
+          <div class="form-group">
+            <label>Buscar Por <span class="required">(*)</span></label>
+            <select id="buscar-por">
+              <option value="1">N&uacute;mero de Documento</option>
+              <option value="2">Apellidos y Nombres</option>
+            </select>
+          </div>
+
+          <!-- Tipo Colegiado -->
+          <div class="form-group">
+            <label>Tipo Colegiado <span class="required">(*)</span></label>
+            <select id="tipo-colegiado">
+            </select>
+          </div>
+
+          <!-- Campos por documento (mode 1) -->
+          <div class="doc-fields">
+            <div class="form-group">
+              <label>Tipo Documento <span class="required">(*)</span></label>
+              <select id="tipo-documento">
+              </select>
+            </div>
+            <div class="form-group">
+              <label>N&ordm; Documento <span class="required">(*)</span></label>
+              <input type="text" id="nro-documento" maxlength="20">
+            </div>
+          </div>
+
+          <!-- Campos por nombre (mode 2) -->
+          <div class="name-fields">
+            <div class="form-group">
+              <label>Primer Apellido <span class="required">(*)</span></label>
+              <input type="text" id="primer-apellido" style="text-transform:uppercase">
+            </div>
+            <div class="form-group">
+              <label>Segundo Apellido</label>
+              <input type="text" id="segundo-apellido" style="text-transform:uppercase">
+            </div>
+            <div class="form-group">
+              <label>Nombres</label>
+              <input type="text" id="nombres" style="text-transform:uppercase">
+            </div>
+          </div>
+
+          <!-- Captcha -->
+          <div class="captcha-group">
+            <img id="captcha-img" class="captcha-img" src="" alt="Captcha">
+            <button id="btn-refresh" class="btn-refresh" title="Refrescar captcha">&#8635;</button>
+            <div class="form-group captcha-input">
+              <label>Resultado de la Operaci&oacute;n</label>
+              <input type="text" id="captcha-input" maxlength="10">
+            </div>
+          </div>
+
+          <!-- Boton -->
+          <button id="btn-consultar" class="btn-consultar">Consultar</button>
+        </div>
+
+        <hr class="divider">
+      </div>
+
+      <!-- Resultados -->
+      <div class="results-area" id="results-container">
+      </div>
+    </div>
+  </div>
+
+  <script>window.__API_URL__ = '<%= apiUrl %>';</script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
