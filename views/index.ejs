@@ -3,104 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Busqueda de Colegiados - CIP</title>
+  <title>SICE - B&uacute;squeda de Colegiados</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
+  <!-- Header -->
+  <div class="cip-header">
+    <div class="cip-header-inner">
       <div class="logo-left">
-        <svg width="55" height="50" viewBox="0 0 55 50">
-          <rect x="0" y="0" width="55" height="50" rx="4" fill="#fff"/>
-          <text x="8" y="22" font-size="14" font-weight="bold" fill="#d4a017">C</text>
-          <text x="20" y="22" font-size="14" font-weight="bold" fill="#e53935">I</text>
-          <text x="28" y="22" font-size="14" font-weight="bold" fill="#1565c0">P</text>
-          <text x="8" y="42" font-size="10" fill="#333" font-weight="bold">VIRTUAL</text>
-        </svg>
+        <img src="/assets/logo-sice.png" alt="CIP Virtual">
       </div>
-      <h1>B&uacute;squeda de Colegiados</h1>
+      <h2 class="cip-title">B&uacute;squeda de Colegiados</h2>
       <div class="logo-right">
-        <svg width="50" height="50" viewBox="0 0 50 50">
-          <circle cx="25" cy="25" r="24" fill="#851610" stroke="#ffd700" stroke-width="1"/>
-          <text x="25" y="30" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CIP</text>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Panel de busqueda -->
-    <div class="panel">
-      <div class="panel-body">
-        <div class="form-row">
-          <!-- Buscar Por -->
-          <div class="form-group">
-            <label>Buscar Por <span class="required">(*)</span></label>
-            <select id="buscar-por">
-              <option value="1">N&uacute;mero de Documento</option>
-              <option value="2">Apellidos y Nombres</option>
-            </select>
-          </div>
-
-          <!-- Tipo Colegiado -->
-          <div class="form-group">
-            <label>Tipo Colegiado <span class="required">(*)</span></label>
-            <select id="tipo-colegiado">
-            </select>
-          </div>
-
-          <!-- Campos por documento (mode 1) -->
-          <div class="doc-fields">
-            <div class="form-group">
-              <label>Tipo Documento <span class="required">(*)</span></label>
-              <select id="tipo-documento">
-              </select>
-            </div>
-            <div class="form-group">
-              <label>N&ordm; Documento <span class="required">(*)</span></label>
-              <input type="text" id="nro-documento" maxlength="20">
-            </div>
-          </div>
-
-          <!-- Campos por nombre (mode 2) -->
-          <div class="name-fields">
-            <div class="form-group">
-              <label>Primer Apellido <span class="required">(*)</span></label>
-              <input type="text" id="primer-apellido" style="text-transform:uppercase">
-            </div>
-            <div class="form-group">
-              <label>Segundo Apellido</label>
-              <input type="text" id="segundo-apellido" style="text-transform:uppercase">
-            </div>
-            <div class="form-group">
-              <label>Nombres</label>
-              <input type="text" id="nombres" style="text-transform:uppercase">
-            </div>
-          </div>
-
-          <!-- Captcha -->
-          <div class="captcha-group">
-            <img id="captcha-img" class="captcha-img" src="" alt="Captcha">
-            <button id="btn-refresh" class="btn-refresh" title="Refrescar captcha">&#8635;</button>
-            <div class="form-group captcha-input">
-              <label>Resultado de la Operaci&oacute;n</label>
-              <input type="text" id="captcha-input" maxlength="10">
-            </div>
-          </div>
-
-          <!-- Boton -->
-          <button id="btn-consultar" class="btn-consultar">Consultar</button>
-        </div>
-
-        <hr class="divider">
-      </div>
-
-      <!-- Resultados -->
-      <div class="results-area" id="results-container">
+        <img src="/assets/logo-empresa.png" alt="CIP">
       </div>
     </div>
   </div>
 
-  <script>window.__API_URL__ = '<%= apiUrl %>';</script>
+  <!-- Panel -->
+  <div class="cip-panel">
+    <div class="cip-form">
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">Buscar Por <span class="req">(*)</span></label>
+          <select id="buscar-por" class="form-select">
+            <option value="1">N&uacute;mero de Documento</option>
+            <option value="2">Apellidos y Nombres</option>
+          </select>
+        </div>
+
+        <div class="form-col">
+          <label class="form-label">Tipo Colegiado <span class="req">(*)</span></label>
+          <select id="tipo-colegiado" class="form-select">
+            <option value="">--Seleccione--</option>
+            <option value="5348">ORDINARIO O VITALICIO</option>
+            <option value="5350">TEMPORAL</option>
+          </select>
+        </div>
+
+        <!-- Campos modo documento -->
+        <div class="doc-fields" id="doc-fields">
+          <div class="form-col">
+            <label class="form-label">Tipo Documento <span class="req">(*)</span></label>
+            <select id="tipo-documento" class="form-select">
+              <option value="4612">Reg. CIP</option>
+              <option value="8">DNI</option>
+              <option value="9">RUC</option>
+              <option value="10">Carnet de Extranjeria</option>
+              <option value="4550">Pasaporte</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label class="form-label">N&ordm; Documento <span class="req">(*)</span></label>
+            <input type="text" id="nro-documento" class="form-input" maxlength="20">
+          </div>
+        </div>
+
+        <!-- Campos modo nombres -->
+        <div class="name-fields" id="name-fields" style="display:none;">
+          <div class="form-col">
+            <label class="form-label">Primer Apellido <span class="req">(*)</span></label>
+            <input type="text" id="primer-apellido" class="form-input" style="text-transform:uppercase">
+          </div>
+          <div class="form-col">
+            <label class="form-label">Segundo Apellido</label>
+            <input type="text" id="segundo-apellido" class="form-input" style="text-transform:uppercase">
+          </div>
+          <div class="form-col">
+            <label class="form-label">Nombres</label>
+            <input type="text" id="nombres" class="form-input" style="text-transform:uppercase">
+          </div>
+        </div>
+
+        <!-- Captcha -->
+        <div class="captcha-area">
+          <img id="captcha-img" class="captcha-img" src="" alt="Captcha">
+          <button id="btn-refresh" class="btn-refresh" title="Refrescar captcha">&#x21BB;</button>
+        </div>
+
+        <!-- Boton consultar -->
+        <div class="form-col btn-col">
+          <button id="btn-consultar" class="btn-consultar">Consultar</button>
+        </div>
+      </div>
+
+      <!-- Input captcha debajo del captcha img -->
+      <div class="captcha-input-row">
+        <label class="captcha-label">Resultado de la Operaci&oacute;n</label>
+        <input type="text" id="captcha-input" class="form-input captcha-input-field" maxlength="10">
+      </div>
+
+      <hr class="form-divider">
+    </div>
+
+    <!-- Resultados -->
+    <div id="results-container"></div>
+  </div>
+
+  <!-- Modal de detalle -->
+  <div id="detail-overlay" class="modal-overlay" style="display:none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span>Detalle de los Datos del Colegiado</span>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <div class="modal-loading">
+          <img src="/e/images/loading-bars.gif" alt="Cargando...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__API_URL__ = '<%= apiUrl %>';
+    window.__PREFILL_CIP__ = '<%= prefillCip %>';
+    window.__PREFILL_TIPO__ = '<%= prefillTipo %>';
+  </script>
   <script src="/js/app.js"></script>
 </body>
 </html>

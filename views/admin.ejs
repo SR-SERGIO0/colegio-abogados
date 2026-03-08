@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Colegiados Custom</title>
+  <title>Admin - Colegiados</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
@@ -29,7 +29,7 @@
     .login-box button:hover { background: #c73650; }
     .login-error { color: #e94560; font-size: 12px; text-align: center; margin-top: 8px; display: none; }
 
-    .admin-container { max-width: 1000px; margin: 0 auto; padding: 20px; display: none; }
+    .admin-container { max-width: 1100px; margin: 0 auto; padding: 20px; display: none; }
     .admin-container.active { display: block; }
 
     .admin-header {
@@ -61,14 +61,15 @@
     }
     .btn-add:hover { background: #c73650; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { background: #16213e; padding: 10px; text-align: left; color: #e94560; }
-    td { padding: 8px 10px; border-bottom: 1px solid #222; }
-    tr:hover { background: #16213e; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { background: #16213e; padding: 8px 6px; text-align: left; color: #e94560; white-space: nowrap; }
+    td { padding: 6px; border-bottom: 1px solid #222; white-space: nowrap; }
+    tr:hover { background: rgba(233,69,96,0.05); }
 
     .btn-edit, .btn-delete {
-      padding: 3px 10px; border: none; border-radius: 3px;
-      cursor: pointer; font-size: 11px; margin-right: 4px;
+      padding: 3px 8px; border: none; border-radius: 3px;
+      cursor: pointer; font-size: 11px; margin-right: 3px;
     }
     .btn-edit { background: #0f3460; color: #eee; }
     .btn-delete { background: #e94560; color: white; }
@@ -94,36 +95,54 @@
   <!-- Admin -->
   <div class="admin-container" id="admin-container">
     <div class="admin-header">
-      <h1>Colegiados Custom - Panel Admin</h1>
+      <h1>Colegiados - Panel Admin</h1>
       <button class="btn-logout" onclick="doLogout()">Cerrar Sesion</button>
     </div>
 
     <div id="msg-area"></div>
 
-    <!-- Form agregar -->
+    <!-- Form -->
     <div class="form-card">
       <h3 id="form-title">Agregar Colegiado</h3>
-      <input type="hidden" id="edit-id">
       <div class="form-grid">
         <div>
           <label>Reg. CIP *</label>
-          <input type="text" id="f-cip" placeholder="123456">
+          <input type="text" id="f-cip" placeholder="291951">
         </div>
         <div>
-          <label>Apellidos y Nombres *</label>
-          <input type="text" id="f-nombre" placeholder="APELLIDO1 APELLIDO2, NOMBRE" style="text-transform:uppercase">
+          <label>Primer Apellido *</label>
+          <input type="text" id="f-papellido" placeholder="CARHUAMACA" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Segundo Apellido</label>
+          <input type="text" id="f-sapellido" placeholder="PAYANO" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Nombres *</label>
+          <input type="text" id="f-nombres" placeholder="FIDEL" style="text-transform:uppercase">
         </div>
         <div>
           <label>Especialidad</label>
-          <input type="text" id="f-especialidad" placeholder="INGENIERIA CIVIL" style="text-transform:uppercase">
+          <input type="text" id="f-especialidad" placeholder="AMBIENTAL" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label>Capitulo</label>
+          <input type="text" id="f-capitulo" placeholder="AMBIENTAL" style="text-transform:uppercase">
         </div>
         <div>
           <label>Sede</label>
-          <input type="text" id="f-sede" placeholder="LIMA" style="text-transform:uppercase">
+          <input type="text" id="f-sede" placeholder="JUNIN" style="text-transform:uppercase">
         </div>
         <div>
-          <label>Estado</label>
+          <label>Estado Registro</label>
           <select id="f-estado">
+            <option value="ACTIVO">ACTIVO</option>
+            <option value="INACTIVO">INACTIVO</option>
+          </select>
+        </div>
+        <div>
+          <label>Condicion</label>
+          <select id="f-condicion">
             <option value="HABILITADO">HABILITADO</option>
             <option value="INHABILITADO">INHABILITADO</option>
           </select>
@@ -132,28 +151,57 @@
           <label>Nro Documento</label>
           <input type="text" id="f-nrodoc" placeholder="12345678">
         </div>
+        <div>
+          <label>Tipo Documento</label>
+          <select id="f-tipodoc">
+            <option value="4612">Reg. CIP</option>
+            <option value="8">DNI</option>
+            <option value="9">RUC</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo Colegiado</label>
+          <select id="f-tipocol">
+            <option value="5348">ORDINARIO O VITALICIO</option>
+            <option value="5350">TEMPORAL</option>
+          </select>
+        </div>
+        <div>
+          <label>Fecha Incorporacion</label>
+          <input type="text" id="f-fechainc" placeholder="29/09/2022">
+        </div>
+        <div>
+          <label>Fecha Reconocimiento CIP</label>
+          <input type="text" id="f-fecharec" placeholder="29/09/2022">
+        </div>
+        <div>
+          <label>URL Foto (opcional)</label>
+          <input type="text" id="f-foto" placeholder="https://...">
+        </div>
       </div>
-      <button class="btn-add" id="btn-save" onclick="saveRecord()">Guardar</button>
+      <button class="btn-add" onclick="saveRecord()">Guardar</button>
       <button class="btn-add" id="btn-cancel" onclick="cancelEdit()" style="background:#555;display:none;">Cancelar</button>
     </div>
 
     <!-- Tabla -->
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>CIP</th>
-          <th>Nombre</th>
-          <th>Especialidad</th>
-          <th>Sede</th>
-          <th>Estado</th>
-          <th>Nro Doc</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>CIP</th>
+            <th>Nombre Completo</th>
+            <th>Especialidad</th>
+            <th>Sede</th>
+            <th>Estado</th>
+            <th>Condicion</th>
+            <th>Nro Doc</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
   </div>
 
   <script>
@@ -185,12 +233,8 @@
       authHeader = '';
       document.getElementById('login-overlay').style.display = 'flex';
       document.getElementById('admin-container').classList.remove('active');
-      document.getElementById('login-user').value = '';
-      document.getElementById('login-pass').value = '';
-      document.getElementById('login-error').style.display = 'none';
     }
 
-    // Enter key on login
     document.getElementById('login-pass').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') doLogin();
     });
@@ -205,18 +249,18 @@
       try {
         const res = await fetch(`${API}/admin/colegiados`, { headers: { Authorization: authHeader } });
         const data = await res.json();
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = data.map(r => `
+        document.getElementById('table-body').innerHTML = data.map(r => `
           <tr>
             <td>${r.id}</td>
             <td>${r.vRegCip}</td>
-            <td>${r.vRazonSocial}</td>
+            <td>${r.vRazonSocial || ''}</td>
             <td>${r.vEspecialidad || ''}</td>
             <td>${r.vSede || ''}</td>
             <td>${r.vEstado || ''}</td>
+            <td>${r.condicion || ''}</td>
             <td>${r.nro_documento || ''}</td>
             <td>
-              <button class="btn-edit" onclick='startEdit(${JSON.stringify(r)})'>Editar</button>
+              <button class="btn-edit" onclick='startEdit(${JSON.stringify(r).replace(/'/g, "&#39;")})'>Editar</button>
               <button class="btn-delete" onclick="deleteRecord(${r.id})">Eliminar</button>
             </td>
           </tr>
@@ -228,17 +272,24 @@
 
     async function saveRecord() {
       const body = {
-        vRegCip: document.getElementById('f-cip').value.trim(),
-        vRazonSocial: document.getElementById('f-nombre').value.trim().toUpperCase(),
-        vEspecialidad: document.getElementById('f-especialidad').value.trim().toUpperCase(),
-        vSede: document.getElementById('f-sede').value.trim().toUpperCase(),
-        vEstado: document.getElementById('f-estado').value,
-        nro_documento: document.getElementById('f-nrodoc').value.trim()
+        vRegCip: g('f-cip'),
+        primer_apellido: g('f-papellido').toUpperCase(),
+        segundo_apellido: g('f-sapellido').toUpperCase(),
+        nombres: g('f-nombres').toUpperCase(),
+        vEspecialidad: g('f-especialidad').toUpperCase(),
+        capitulo: g('f-capitulo').toUpperCase(),
+        vSede: g('f-sede').toUpperCase(),
+        vEstado: g('f-estado'),
+        condicion: g('f-condicion'),
+        nro_documento: g('f-nrodoc'),
+        tipo_documento: Number(g('f-tipodoc')),
+        tipo_colegiado: Number(g('f-tipocol')),
+        fecha_incorporacion: g('f-fechainc'),
+        fecha_reconocimiento: g('f-fecharec'),
+        foto_url: g('f-foto')
       };
 
-      if (!body.vRegCip || !body.vRazonSocial) {
-        return showMsg('CIP y Nombre son obligatorios', 'error');
-      }
+      if (!body.vRegCip) return showMsg('CIP es obligatorio', 'error');
 
       const method = editingId ? 'PUT' : 'POST';
       const url = editingId ? `${API}/admin/colegiados/${editingId}` : `${API}/admin/colegiados`;
@@ -249,29 +300,38 @@
           headers: { 'Content-Type': 'application/json', Authorization: authHeader },
           body: JSON.stringify(body)
         });
-        const data = await res.json();
         if (res.ok) {
-          showMsg(editingId ? 'Registro actualizado' : 'Registro creado', 'success');
+          showMsg(editingId ? 'Actualizado' : 'Creado', 'success');
           cancelEdit();
           clearForm();
           loadRecords();
         } else {
-          showMsg(data.error || 'Error', 'error');
+          const d = await res.json();
+          showMsg(d.error || 'Error', 'error');
         }
       } catch (e) {
         showMsg('Error de conexion', 'error');
       }
     }
 
-    function startEdit(record) {
-      editingId = record.id;
-      document.getElementById('f-cip').value = record.vRegCip || '';
-      document.getElementById('f-nombre').value = record.vRazonSocial || '';
-      document.getElementById('f-especialidad').value = record.vEspecialidad || '';
-      document.getElementById('f-sede').value = record.vSede || '';
-      document.getElementById('f-estado').value = record.vEstado || 'HABILITADO';
-      document.getElementById('f-nrodoc').value = record.nro_documento || '';
-      document.getElementById('form-title').textContent = 'Editar Colegiado #' + record.id;
+    function startEdit(r) {
+      editingId = r.id;
+      s('f-cip', r.vRegCip);
+      s('f-papellido', r.primer_apellido);
+      s('f-sapellido', r.segundo_apellido);
+      s('f-nombres', r.nombres);
+      s('f-especialidad', r.vEspecialidad);
+      s('f-capitulo', r.capitulo);
+      s('f-sede', r.vSede);
+      s('f-estado', r.vEstado || 'ACTIVO');
+      s('f-condicion', r.condicion || 'HABILITADO');
+      s('f-nrodoc', r.nro_documento);
+      s('f-tipodoc', r.tipo_documento || '4612');
+      s('f-tipocol', r.tipo_colegiado || '5348');
+      s('f-fechainc', r.fecha_incorporacion);
+      s('f-fecharec', r.fecha_reconocimiento);
+      s('f-foto', r.foto_url);
+      document.getElementById('form-title').textContent = 'Editar #' + r.id;
       document.getElementById('btn-cancel').style.display = 'inline-block';
       window.scrollTo(0, 0);
     }
@@ -283,27 +343,26 @@
     }
 
     function clearForm() {
-      ['f-cip', 'f-nombre', 'f-especialidad', 'f-sede', 'f-nrodoc'].forEach(id => {
+      ['f-cip','f-papellido','f-sapellido','f-nombres','f-especialidad','f-capitulo',
+       'f-sede','f-nrodoc','f-fechainc','f-fecharec','f-foto'].forEach(id => {
         document.getElementById(id).value = '';
       });
-      document.getElementById('f-estado').value = 'HABILITADO';
+      s('f-estado', 'ACTIVO');
+      s('f-condicion', 'HABILITADO');
     }
 
     async function deleteRecord(id) {
-      if (!confirm('Eliminar registro #' + id + '?')) return;
+      if (!confirm('Eliminar #' + id + '?')) return;
       try {
         const res = await fetch(`${API}/admin/colegiados/${id}`, {
-          method: 'DELETE',
-          headers: { Authorization: authHeader }
+          method: 'DELETE', headers: { Authorization: authHeader }
         });
-        if (res.ok) {
-          showMsg('Registro eliminado', 'success');
-          loadRecords();
-        }
-      } catch (e) {
-        showMsg('Error eliminando', 'error');
-      }
+        if (res.ok) { showMsg('Eliminado', 'success'); loadRecords(); }
+      } catch (e) { showMsg('Error', 'error'); }
     }
+
+    function g(id) { return (document.getElementById(id).value || '').trim(); }
+    function s(id, v) { document.getElementById(id).value = v || ''; }
   </script>
 </body>
 </html>
